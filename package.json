@@ -1,0 +1,30 @@
+{
+  "name": "react-freezer-link",
+  "version": "1.0.0",
+  "description": "A React mixin for linking form fields to a deep structure of data within the component's props which provided by Freezer. ",
+  "main": "mixin.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TrigenSoftware/react-freezer-link.git"
+  },
+  "keywords": [
+    "react",
+    "freezer",
+    "linkstate",
+    "flux",
+    "tree"
+  ],
+  "dependencies": {
+    "lodash": "^3.6.0",
+    "react": "^0.14.3"
+  },
+  "author": "dangreen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TrigenSoftware/react-freezer-link/issues"
+  },
+  "homepage": "https://github.com/TrigenSoftware/react-freezer-link#readme"
+}
