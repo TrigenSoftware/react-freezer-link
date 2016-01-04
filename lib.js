@@ -13,10 +13,11 @@ var Lib = {
         var config = this.constructor.deepLinkeStateConfig;
 
         options = _.defaults({}, options, config, {
-            storeEmptyStringAsNull: false
+            storeEmptyStringAsNull: false,
+            context: valueObject
         });
         
-        var value = valueObject;
+        var value = options.context;
         
         var havePath = _.all(propsPath, function(propsPathPart) {
 
@@ -57,20 +58,22 @@ var Lib = {
         var config = this.constructor.deepLinkeStateConfig;
 
         options = _.defaults({}, options, config, {
-            storeEmptyStringAsNull: false
+            storeEmptyStringAsNull: false,
+            context: valueObject
         });
 
         propsPath = propsPath.concat();
         
-        var propName = propsPath.pop();
+        var context  = options.context,
+            propName = propsPath.pop();
         
         var havePath = _.all(propsPath, function(propsPathPart) {
 
-            if (!_.isObject(valueObject) || !valueObject.hasOwnProperty(propsPathPart)) {
+            if (!_.isObject(context) || !context.hasOwnProperty(propsPathPart)) {
                 return false;
             }
             
-            valueObject = valueObject[propsPathPart];
+            context = context[propsPathPart];
             
             return true;
         });
@@ -86,7 +89,7 @@ var Lib = {
             }
         }
         
-        return valueObject.set(propName, value).now();
+        return context.set(propName, value).now();
     }
 };
 
