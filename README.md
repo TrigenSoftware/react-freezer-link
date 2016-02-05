@@ -36,19 +36,19 @@ Link a text field to ```this.props.data.user.name```:
 
 Link a text field to ```this.props.data.user.name```, translating an empty string in the text field to null in the state and vice-versa:
 ```jsx
-<input type="text" valueLink={this.linkProps('data.user.name', {storeEmptyStringAsNull: true})} />
+<input type="text" valueLink={this.linkProp('data.user.name', {storeEmptyStringAsNull: true})} />
 ```
 
 In both cases above you can add callback:
 ```jsx
-<input type="text" valueLink={this.linkProps('data.user.name', (newVale) => {...})} />
-<input type="text" valueLink={this.linkProps('data.user.name', {storeEmptyStringAsNull: true}, (newVale) => {...})} />
+<input type="text" valueLink={this.linkProp('data.user.name', (newVale) => {...})} />
+<input type="text" valueLink={this.linkProp('data.user.name', {storeEmptyStringAsNull: true}, (newVale) => {...})} />
 ```
 
 Furthermore you can set context:
 ```jsx
 items.map(user => (
-	<input type="text" valueLink={this.linkProps('name', {context: user})} />
+	<input type="text" valueLink={this.linkProp('name', {context: user})} />
 ))
 ```
 
