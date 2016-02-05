@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
-export function getValueFromState(propsPath, options) {
-    return getValueFromObject(propsPath, options, this.props);
+export function getValueFromProp(propsPath, options) {
+    return getValueFromObject.call(this, propsPath, options, this.props);
 }
 
 export function getValueFromObject(propsPath, options, valueObject) {
@@ -42,7 +42,7 @@ export function getValueFromObject(propsPath, options, valueObject) {
 
 export function onChange(propsPath, options, callback, value) {
 
-    updateValueObject(propsPath, options, this.props, value);
+    updateValueObject.call(this, propsPath, options, this.props, value);
 
     if (typeof callback == "function") {
         setTimeout(callback.bind(this, value));

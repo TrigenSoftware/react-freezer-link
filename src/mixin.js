@@ -1,12 +1,12 @@
-import { getValueFromState, onChange } from './lib';
+import { getValueFromProp, onChange } from './lib';
 import ReactLink from 'react/lib/ReactLink';
 
 export default {
 
-    linkProp(statePath, options, callback) {
+    linkProp(propPath, options, callback) {
         
-        if (typeof statePath == "string") {
-            statePath = statePath.split(/[\.\[\]]/g);
+        if (typeof propPath == "string") {
+            propPath = propPath.split(/[\.\[\]]/g);
         }
         
         if (typeof options == "function") {
@@ -15,8 +15,8 @@ export default {
         }
         
         var link = new ReactLink(
-            getValueFromState.call(this, statePath, options),
-            onChange.bind(this, statePath, options, callback)
+            getValueFromProp.call(this, propPath, options),
+            onChange.bind(this, propPath, options, callback)
         );
 
         return link;
