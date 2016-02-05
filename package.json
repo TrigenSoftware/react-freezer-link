@@ -13,12 +13,15 @@
   },
   "keywords": [
     "react",
+    "link",
+    "props",
     "mixin",
     "deep",
     "freezer",
     "linkstate",
     "flux",
-    "tree"
+    "tree",
+    "form"
   ],
   "author": "dangreen",
   "license": "MIT",
