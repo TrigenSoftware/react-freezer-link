@@ -1,10 +1,11 @@
 {
   "name": "react-freezer-link",
-  "version": "1.0.1",
-  "description": "A React mixin for linking form fields to a deep structure of data within the component's props which provided by Freezer. ",
-  "main": "mixin.js",
+  "version": "1.1.0",
+  "description": "A React mixin for linking form fields to a deep structure of data within the component's props which provided by Freezer.",
+  "main": "lib/mixin.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "compile": "babel ./src -d ./lib",
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",
@@ -12,19 +13,36 @@
   },
   "keywords": [
     "react",
+    "mixin",
+    "deep",
     "freezer",
     "linkstate",
     "flux",
     "tree"
   ],
-  "dependencies": {
-    "lodash": "^3.6.0",
-    "react": "^0.14.3"
-  },
   "author": "dangreen",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/TrigenSoftware/react-freezer-link/issues"
   },
-  "homepage": "https://github.com/TrigenSoftware/react-freezer-link#readme"
+  "homepage": "https://github.com/TrigenSoftware/react-freezer-link#readme",
+  "dependencies": {
+    "lodash": "^3.6.0",
+    "react": "^0.14.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "babel-plugin-add-module-exports": "^0.1.2"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-0"
+    ],
+    "plugins": [
+      "add-module-exports"
+    ]
+  }
 }

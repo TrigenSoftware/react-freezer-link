@@ -1,11 +1,9 @@
-'use strict';
+import { getValueFromState, onChange } from './lib';
+import ReactLink from 'react/lib/ReactLink';
 
-var ReactLink = require('react/lib/ReactLink'),
-    Lib       = require('./lib');
+export default {
 
-module.exports = {
-
-    linkProp: function(statePath, options, callback) {
+    linkProp(statePath, options, callback) {
         
         if (typeof statePath == "string") {
             statePath = statePath.split(/[\.\[\]]/g);
@@ -17,8 +15,8 @@ module.exports = {
         }
         
         var link = new ReactLink(
-            Lib.getValueFromState.call(this, statePath, options),
-            Lib.onChange.bind(this, statePath, options, callback)
+            getValueFromState.call(this, statePath, options),
+            onChange.bind(this, statePath, options, callback)
         );
 
         return link;
