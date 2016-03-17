@@ -33,6 +33,7 @@ or
 import FreezerLinkDecorator from 'react-freezer-link/lib/decorator';
 
 ...
+
 @FreezerLinkDecorator
 class MyComponent extends React.Component {
 	...
