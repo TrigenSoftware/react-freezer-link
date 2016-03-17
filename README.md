@@ -1,4 +1,4 @@
-[![NPM](https://nodei.co/npm/react-freezer-link.png?compact=true)](https://nodei.co/npm/react-freezer-link/)
+[![NPM](https://nodei.co/npm/react-freezer-link.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/react-freezer-link/)
 
 # react-freezer-link
 A React mixin for linking form fields to a deep structure of data within the component's prop which provided by Freezer.
