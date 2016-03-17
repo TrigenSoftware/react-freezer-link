@@ -27,6 +27,18 @@ var MyComponent = React.createClass({
 });
 ```
 
+or
+
+```js
+import FreezerLinkDecorator from 'react-freezer-link/lib/decorator';
+
+...
+@FreezerLinkDecorator
+class MyComponent extends React.Component {
+	...
+}
+```
+
 # Usage Examples #
 
 Link a text field to ```this.props.data.user.name```:
