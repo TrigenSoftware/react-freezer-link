@@ -1,19 +1,87 @@
-import _ from 'lodash';
+import ReactLink from 'react/lib/ReactLink';
+import _         from 'lodash';
 
-export function getValueFromProp(propsPath, options) {
-    return getValueFromObject.call(this, propsPath, options, this.props);
+export default class Link extends ReactLink {
+
+    constructor(context, _propPath, _options, _callback) {
+
+        var propPath = _propPath,
+            options   = _options,
+            callback  = _callback;
+        
+        if (typeof propPath == "string") {
+            propPath = propPath.split(/[\.\[\]]/g);
+        }
+        
+        if (typeof options == "function") {
+            callback = options;
+            options  = false;
+        }
+
+        super(
+            getValueFromProps(context, propPath, options), 
+            requestChange.bind(context, propPath, options, callback)
+        );
+
+        this.onChange = onChange.bind(context, propPath, options, callback);
+    }
 }
 
-export function getValueFromObject(propsPath, options, valueObject) {
+/**
+ * Request change function for `valueLink` property.
+ * 
+ * @param  {Array}    path to property
+ * @param  {Object}   options
+ * @param  {Function} callback
+ * @param  {Object}   new value
+ */
+function requestChange(propsPath, options, callback, value) {
 
-    var config = this.constructor.freezerLinkConfig;
+    setValueToProps(this, propsPath, options, value);
 
-    options = _.defaults({}, options, config, {
-        storeEmptyStringAsNull: false,
-        context: valueObject
-    });
-    
-    var value = options.context;
+    if (typeof callback == "function") {
+        setTimeout(callback.bind(this, value));
+    }
+}
+
+/**
+ * On change function for usage without `valueLink` property. (React v15)
+ * 
+ * @param  {Array}    path to property
+ * @param  {Object}   options
+ * @param  {Function} callback
+ * @param  {Object}   DOM onChange event object
+ */
+function onChange(propsPath, options, callback, event) {
+
+    var { type, value, checked } = event.target;
+
+    if (type == "checkbox" || type == "radio") {
+        value = checked;
+    }
+
+    setValueToProps(this, propsPath, options, value);
+
+    if (typeof callback == "function") {
+        setTimeout(callback.bind(this, value));
+    }
+}
+
+/**
+ * Get value from props of component.
+ * 
+ * @param  {Object} react component context
+ * @param  {Array}  path to property
+ * @param  {Object} options
+ * @return {Object}
+ */
+function getValueFromProps(context, propsPath, _options) {
+
+    var options = _.defaults({}, _options, context.constructor.freezerLinkConfig, {
+            storeEmptyStringAsNull: false,
+            context: context.props
+        }),
+        value = options.context;
     
     var havePath = _.all(propsPath, (propsPathPart) => {
 
@@ -40,36 +108,32 @@ export function getValueFromObject(propsPath, options, valueObject) {
     return value;
 }
 
-export function onChange(propsPath, options, callback, value) {
+/**
+ * Set value to props of component.
+ * 
+ * @param  {Object} react component context
+ * @param  {Array}  path to property
+ * @param  {Object} options
+ * @param  {Object} new value
+ * @return {Object}
+ */
+function setValueToProps(context, _propsPath, _options, value) {
 
-    updateValueObject.call(this, propsPath, options, this.props, value);
-
-    if (typeof callback == "function") {
-        setTimeout(callback.bind(this, value));
-    }
-}
-
-export function updateValueObject(propsPath, options, valueObject, value) {
-
-    var config = this.constructor.freezerLinkConfig;
-
-    options = _.defaults({}, options, config, {
-        storeEmptyStringAsNull: false,
-        context: valueObject
-    });
-
-    propsPath = propsPath.concat();
-    
-    var context  = options.context,
-        propName = propsPath.pop();
+    var propsPath = _propsPath.concat(),
+        propName  = propsPath.pop(),
+        options   = _.defaults({}, _options, context.constructor.freezerLinkConfig, {
+            storeEmptyStringAsNull: false,
+            context: context.props
+        }),
+        updateContext = options.context;
     
     var havePath = _.all(propsPath, (propsPathPart) => {
 
-        if (!_.isObject(context) || !context.hasOwnProperty(propsPathPart)) {
+        if (!_.isObject(updateContext) || !updateContext.hasOwnProperty(propsPathPart)) {
             return false;
         }
         
-        context = context[propsPathPart];
+        updateContext = updateContext[propsPathPart];
         
         return true;
     });
@@ -85,5 +149,5 @@ export function updateValueObject(propsPath, options, valueObject, value) {
         }
     }
     
-    return context.set(propName, value).now();
+    return updateContext.set(propName, value).now();
 }
