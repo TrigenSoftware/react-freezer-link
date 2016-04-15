@@ -1,3 +1,3 @@
-import * as Mixin from './lib';
+import { linkProp, valueLinkToProp, checkedLinkToProp } from './lib';
 
-export default Mixin;
+export default { linkProp, valueLinkToProp, checkedLinkToProp };
