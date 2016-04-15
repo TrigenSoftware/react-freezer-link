@@ -1,30 +1,68 @@
-import ReactLink from 'react/lib/ReactLink';
-import _         from 'lodash';
+import _ from 'lodash';
 
-export default class Link extends ReactLink {
+export function linkProp(_propPath, _options, _callback) {
 
-    constructor(context, _propPath, _options, _callback) {
-
-        var propPath = _propPath,
-            options   = _options,
-            callback  = _callback;
-        
-        if (typeof propPath == "string") {
-            propPath = propPath.split(/[\.\[\]]/g);
-        }
-        
-        if (typeof options == "function") {
-            callback = options;
-            options  = false;
-        }
-
-        super(
-            getValueFromProps(context, propPath, options), 
-            requestChange.bind(context, propPath, options, callback)
-        );
-
-        this.onChange = onChange.bind(context, propPath, options, callback);
+    var propPath = _propPath,
+        options  = _options,
+        callback = _callback;
+    
+    if (typeof propPath == "string") {
+        propPath = propPath.split(/[\.\[\]]/g);
     }
+    
+    if (typeof options == "function") {
+        callback = options;
+        options  = false;
+    }
+
+    return {
+        value:         getValueFromProps(  this, propPath, options),
+        requestChange: requestChange.bind( this, propPath, options, callback)
+    };
+}
+
+export function valueLinkToProp(_propPath, _options, _callback) {
+
+    var propPath = _propPath,
+        options  = _options,
+        callback = _callback;
+    
+    if (typeof propPath == "string") {
+        propPath = propPath.split(/[\.\[\]]/g);
+    }
+    
+    if (typeof options == "function") {
+        callback = options;
+        options  = false;
+    }
+
+    return {
+        value:         getValueFromProps(  this, propPath, options),
+        requestChange: requestChange.bind( this, propPath, options, callback),
+        onChange:      onChange.bind(      this, propPath, options, callback)
+    };
+}
+
+export function checkedLinkToProp(_propPath, _options, _callback) {
+
+    var propPath = _propPath,
+        options  = _options,
+        callback = _callback;
+    
+    if (typeof propPath == "string") {
+        propPath = propPath.split(/[\.\[\]]/g);
+    }
+    
+    if (typeof options == "function") {
+        callback = options;
+        options  = false;
+    }
+
+    return {
+        checked:       getValueFromProps(  this, propPath, options),
+        requestChange: requestChange.bind( this, propPath, options, callback),
+        onChange:      onChange.bind(      this, propPath, options, callback)
+    };
 }
 
 /**
