@@ -11,7 +11,7 @@ This mixin is a substitute for the standard React mixin React.addons.LinkedState
 
 To install from npm, run:
 
-```npm install --save react-freezer-link```
+`npm install --save react-freezer-link`
 
 Then include the mixin in the component that will use it:
 
@@ -42,7 +42,7 @@ class MyComponent extends React.Component {
 
 # Usage Examples #
 
-Link a text field to ```this.props.data.user.name```:
+Link a text field to `this.props.data.user.name`:
 ```jsx
 <input type="text" valueLink={this.linkProp('data.user.name')} />
 ```
@@ -53,7 +53,7 @@ In React v15 `valueLink` is deprecated "due to very low popularity", because of 
 <input type="checkbox" {...this.checkedLinkToProp('data.user.onDiet')} />
 ```
 
-Link a text field to ```this.props.data.user.name```, translating an empty string in the text field to null in the state and vice-versa:
+Link a text field to `this.props.data.user.name`, translating an empty string in the text field to null in the state and vice-versa:
 ```jsx
 <input type="text" valueLink={this.linkProp('data.user.name', {storeEmptyStringAsNull: true})} />
 ```
@@ -69,6 +69,11 @@ Furthermore you can set context:
 items.map(user => (
 	<input type="text" valueLink={this.linkProp('name', {context: user})} />
 ))
+```
+
+In options you can set `mutator` function:
+```jsx
+<input type="text" {...this.valueLinkToProp('data.user.name', {mutator: _ => _.toUpperCase()})} />
 ```
 
 Also you can define global configs:
