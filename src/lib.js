@@ -1,67 +1,93 @@
-import _ from 'lodash';
+import isObject from 'lodash/isObject';
+import defaults from 'lodash/defaults';
+import every    from 'lodash/every';
 
+/**
+ * Link value to state.
+ * 
+ * @param  {String}   statePath
+ * @param  {Object}   options
+ * @param  {Function} callback
+ * @return {Object}
+ */
 export function linkProp(_propPath, _options, _callback) {
 
-    var propPath = _propPath,
+    let propPath = _propPath,
         options  = _options,
         callback = _callback;
     
-    if (typeof propPath == "string") {
+    if (typeof propPath == 'string') {
         propPath = propPath.split(/[\.\[\]]/g);
     }
     
-    if (typeof options == "function") {
+    if (typeof options == 'function') {
         callback = options;
         options  = false;
     }
 
     return {
-        value:         getValueFromProps(  this, propPath, options),
-        requestChange: requestChange.bind( this, propPath, options, callback)
+        value:         getValueFromProps(  this, propPath, options ),
+        requestChange: requestChange.bind( this, propPath, options, callback )
     };
 }
 
+/**
+ * Link input value to state.
+ * 
+ * @param  {String}   statePath
+ * @param  {Object}   options
+ * @param  {Function} callback
+ * @return {Object}
+ */
 export function valueLinkToProp(_propPath, _options, _callback) {
 
-    var propPath = _propPath,
+    let propPath = _propPath,
         options  = _options,
         callback = _callback;
     
-    if (typeof propPath == "string") {
+    if (typeof propPath == 'string') {
         propPath = propPath.split(/[\.\[\]]/g);
     }
     
-    if (typeof options == "function") {
+    if (typeof options == 'function') {
         callback = options;
         options  = false;
     }
 
     return {
-        value:         getValueFromProps(  this, propPath, options),
-        requestChange: requestChange.bind( this, propPath, options, callback),
-        onChange:      onChange.bind(      this, propPath, options, callback)
+        value:         getValueFromProps(  this, propPath, options ),
+        requestChange: requestChange.bind( this, propPath, options, callback ),
+        onChange:      onChange.bind(      this, propPath, options, callback )
     };
 }
 
+/**
+ * Link checkbox value to state.
+ * 
+ * @param  {String}   statePath
+ * @param  {Object}   options
+ * @param  {Function} callback
+ * @return {Object}
+ */
 export function checkedLinkToProp(_propPath, _options, _callback) {
 
-    var propPath = _propPath,
+    let propPath = _propPath,
         options  = _options,
         callback = _callback;
     
-    if (typeof propPath == "string") {
+    if (typeof propPath == 'string') {
         propPath = propPath.split(/[\.\[\]]/g);
     }
     
-    if (typeof options == "function") {
+    if (typeof options == 'function') {
         callback = options;
         options  = false;
     }
 
     return {
-        checked:       getValueFromProps(  this, propPath, options),
-        requestChange: requestChange.bind( this, propPath, options, callback),
-        onChange:      onChange.bind(      this, propPath, options, callback)
+        checked:       getValueFromProps(  this, propPath, options ),
+        requestChange: requestChange.bind( this, propPath, options, callback ),
+        onChange:      onChange.bind(      this, propPath, options, callback )
     };
 }
 
@@ -73,11 +99,21 @@ export function checkedLinkToProp(_propPath, _options, _callback) {
  * @param  {Function} callback
  * @param  {Object}   new value
  */
-function requestChange(propsPath, options, callback, value) {
+function requestChange(propsPath, _options, callback, value) {
 
-    setValueToProps(this, propsPath, options, value);
+    const options = defaults({}, _options, this.constructor.freezerLinkConfig, {
+            storeEmptyStringAsNull: false,
+            context: this.props
+        }),
+        { mutator } = options;
 
-    if (typeof callback == "function") {
+    if (typeof mutator == 'function') {
+        value = mutator(value);
+    }
+
+    setValueToProps(propsPath, options, value);
+
+    if (typeof callback == 'function') {
         setTimeout(callback.bind(this, value));
     }
 }
@@ -90,17 +126,27 @@ function requestChange(propsPath, options, callback, value) {
  * @param  {Function} callback
  * @param  {Object}   DOM onChange event object
  */
-function onChange(propsPath, options, callback, event) {
+function onChange(propsPath, _options, callback, event) {
 
-    var { type, value, checked } = event.target;
+    let { type, value, checked } = event.target;
 
-    if (type == "checkbox" || type == "radio") {
+    if (type == 'checkbox' || type == 'radio') {
         value = checked;
     }
 
-    setValueToProps(this, propsPath, options, value);
+    const options = defaults({}, _options, this.constructor.freezerLinkConfig, {
+            storeEmptyStringAsNull: false,
+            context: this.props
+        }),
+        { mutator } = options;
 
-    if (typeof callback == "function") {
+    if (typeof mutator == 'function') {
+        value = mutator(value);
+    }
+
+    setValueToProps(propsPath, options, value);
+
+    if (typeof callback == 'function') {
         setTimeout(callback.bind(this, value));
     }
 }
@@ -115,15 +161,16 @@ function onChange(propsPath, options, callback, event) {
  */
 function getValueFromProps(context, propsPath, _options) {
 
-    var options = _.defaults({}, _options, context.constructor.freezerLinkConfig, {
-            storeEmptyStringAsNull: false,
-            context: context.props
-        }),
-        value = options.context;
-    
-    var havePath = _.all(propsPath, (propsPathPart) => {
+    const options = defaults({}, _options, context.constructor.freezerLinkConfig, {
+        storeEmptyStringAsNull: false,
+        context: context.props
+    });
 
-        if (!_.isObject(value) || !value.hasOwnProperty(propsPathPart)) {
+    let value = options.context;
+    
+    const havePath = every(propsPath, (propsPathPart) => {
+
+        if (!isObject(value) || !value.hasOwnProperty(propsPathPart)) {
             return false;
         }
         
@@ -155,19 +202,16 @@ function getValueFromProps(context, propsPath, _options) {
  * @param  {Object} new value
  * @return {Object}
  */
-function setValueToProps(context, _propsPath, _options, value) {
+function setValueToProps(_propsPath, options, value) {
 
-    var propsPath = _propsPath.concat(),
-        propName  = propsPath.pop(),
-        options   = _.defaults({}, _options, context.constructor.freezerLinkConfig, {
-            storeEmptyStringAsNull: false,
-            context: context.props
-        }),
-        updateContext = options.context;
+    const propsPath = _propsPath.concat(),
+        propName    = propsPath.pop();
+
+    let updateContext = options.context;
     
-    var havePath = _.all(propsPath, (propsPathPart) => {
+    const havePath = every(propsPath, (propsPathPart) => {
 
-        if (!_.isObject(updateContext) || !updateContext.hasOwnProperty(propsPathPart)) {
+        if (!isObject(updateContext) || !updateContext.hasOwnProperty(propsPathPart)) {
             return false;
         }
         
