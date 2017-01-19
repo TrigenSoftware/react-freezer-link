@@ -1,6 +1,7 @@
 [![NPM](https://nodei.co/npm/react-freezer-link.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/react-freezer-link/)
 
 # react-freezer-link
+
 A React mixin for linking form fields to a deep structure of data within the component's prop which provided by Freezer.
 
 # Description
@@ -14,7 +15,6 @@ To install from npm, run:
 `npm install --save react-freezer-link`
 
 Then include the mixin in the component that will use it:
-
 ```js
 import FreezerLinkMixin from 'react-freezer-link';
 
@@ -28,7 +28,6 @@ var MyComponent = React.createClass({
 ```
 
 or
-
 ```js
 import FreezerLinkDecorator from 'react-freezer-link/lib/decorator';
 
@@ -40,7 +39,7 @@ class MyComponent extends React.Component {
 }
 ```
 
-# Usage Examples #
+# Usage Examples
 
 Link a text field to `this.props.data.user.name`:
 ```jsx
@@ -91,4 +90,3 @@ class MyComponent extends React.Component {
 	...
 }
 ```
-
